@@ -3,3 +3,8 @@ parameters:
       phpcsfixer2:
         config: .php_cs.dist
         triggered_by: ['php']
+      phpmd:
+        ruleset:
+          - phpmd.xml
+        triggered_by:
+          - php
