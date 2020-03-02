@@ -3,9 +3,11 @@
 /public/storage
 /storage/*.key
 /vendor
+_ide_helper.php
 .env
 .env.backup
 .php_cs.cache
+.phpstorm.meta.php
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
