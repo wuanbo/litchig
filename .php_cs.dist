@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * PHP-CS-Fixer 2.x
+ *
+ * https://github.com/FriendsOfPHP/PHP-CS-Fixer
+ */
+
+return PhpCsFixer\Config::create()
+    ->setRiskyAllowed(true)
+    ->setRules([
+        '@Symfony' => true,
+        'align_multiline_comment' => true,
+        'array_indentation' => true,
+        'combine_consecutive_issets' => true,
+        'combine_consecutive_unsets' => true,
+        'compact_nullable_typehint' => true,
+        'dir_constant' => true,
+        'is_null' => true,
+        'no_null_property_initialization' => true,
+        'no_short_echo_tag' => true,
+        'no_unreachable_default_argument_value' => true,
+        'no_useless_else' => true,
+        'no_useless_return' => true,
+        'phpdoc_no_empty_return' => false,
+        'single_trait_insert_per_statement' => false,
+    ])
+    ->setFinder(
+        PhpCsFixer\Finder::create()
+            ->exclude([
+                'bootstrap',
+                'config',
+                'public',
+                'resources',
+                'storage',
+                'tests',
+                'vendor',
+            ])
+            ->notPath([
+                'server.php',
+            ])
+            ->in(__DIR__)
+    );
