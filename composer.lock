@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "09444a52a3eae99f9528f021b69b2225",
+    "content-hash": "7dd7d902f010f6aa45559c2465560f9d",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -1239,6 +1239,44 @@
                 "storage"
             ],
             "time": "2020-02-05T18:14:17+00:00"
+        },
+        {
+            "name": "litchig/asset",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "packages/litchig-asset",
+                "reference": "4a9b45143501ef58851f535a140569257f8e4404"
+            },
+            "require": {
+                "ext-json": "*",
+                "laravel/framework": "^6.0",
+                "php": "^7.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Litchig\\Asset\\AssetServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Litchig\\Asset\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Litchig\\Asset\\Tests\\": "tests/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Jing Li",
+                    "email": "lym125@gmail.com"
+                }
+            ]
         },
         {
             "name": "monolog/monolog",
