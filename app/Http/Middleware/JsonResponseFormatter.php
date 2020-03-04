@@ -21,7 +21,7 @@ class JsonResponseFormatter
     {
         $response = $next($request);
 
-        if (!$this->isJsonResponse($response = $next($request))) {
+        if (!$this->isJsonResponse($response)) {
             return $response;
         }
 
