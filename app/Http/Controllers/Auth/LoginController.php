@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\Login\LoginRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -48,7 +47,7 @@ class LoginController extends Controller
      */
     public function logout()
     {
-        if ($user = Auth::guard('airlock')->user()) {
+        if ($user = $this->guard('airlock')->user()) {
             optional($user->currentAccessToken())->delete();
         }
 
