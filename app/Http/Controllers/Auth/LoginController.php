@@ -32,11 +32,7 @@ class LoginController extends Controller
         $token = $user->createToken('litchig');
 
         return response()->json([
-            'code' => 0,
-            'data' => [
-                'token' => $token->plainTextToken,
-            ],
-            'message' => 'Login successfully',
+            'token' => $token->plainTextToken,
         ]);
     }
 
@@ -51,10 +47,6 @@ class LoginController extends Controller
             optional($user->currentAccessToken())->delete();
         }
 
-        return response()->json([
-            'code' => 0,
-            'data' => '',
-            'message' => 'Logout successfully',
-        ]);
+        return response()->json(null);
     }
 }
