@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -13,6 +15,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
+        BizException::class,
     ];
 
     /**
@@ -56,5 +59,69 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         return parent::render($request, $exception);
+    }
+
+    /**
+     * Convert an authentication exception into a response.
+     *
+     * @param \Illuminate\Http\Request                 $request
+     * @param \Illuminate\Auth\AuthenticationException $exception
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return $request->expectsJson() ? response()->json([
+            'code' => 401,
+            'data' => '',
+            'message' => $exception->getMessage(),
+        ], 401) : redirect()->guest($exception->redirectTo() ?? route('login'));
+    }
+
+    /**
+     * Convert a validation exception into a JSON response.
+     *
+     * @param \Illuminate\Http\Request                   $request
+     * @param \Illuminate\Validation\ValidationException $exception
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json([
+            'code' => $exception->status,
+            'data' => '',
+            'message' => $exception->validator->errors()->first(),
+            // 'errors' => $exception->errors(),
+        ], $exception->status);
+    }
+
+    /**
+     * Prepare a JSON response for the given exception.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception               $e
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function prepareJsonResponse($request, Exception $e)
+    {
+        if ($e instanceof BizException) {
+            return response()->json([
+                'code' => $e->getCode() ?: 100000,
+                'data' => '',
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        return new JsonResponse(
+            [
+                'code' => 500,
+                'data' => '',
+            ] + $this->convertExceptionToArray($e),
+            $this->isHttpException($e) ? $e->getStatusCode() : 500,
+            $this->isHttpException($e) ? $e->getHeaders() : [],
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+        );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Exceptions\BizException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\Login\LoginRequest;
 use App\Models\User;
@@ -20,8 +21,7 @@ class LoginController extends Controller
         $user = User::where('phone_number', $request->phone_number)->first();
 
         if (!optional($user)->checkPassword($request->password)) {
-            // @todo 自定义异常
-            abort(400, '用户名或密码错误');
+            throw new BizException('用户名或密码错误');
         }
 
         $user->update([
