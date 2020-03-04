@@ -3,38 +3,59 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Http\Requests\Auth\Login\LoginRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers;
-
     /**
-     * Where to redirect users after login.
+     * 用户登录.
      *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
-    /**
-     * Create a new controller instance.
+     * @param \App\Http\Requests\Auth\Login\LoginRequest $request
      *
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function __construct()
+    public function login(LoginRequest $request)
     {
-        $this->middleware('guest')->except('logout');
+        $user = User::where('phone_number', $request->phone_number)->first();
+
+        if (!optional($user)->checkPassword($request->password)) {
+            // @todo 自定义异常
+            abort(400, '用户名或密码错误');
+        }
+
+        $user->update([
+            'last_login_ip' => $request->ip(),
+            'last_login_at' => now(),
+        ]);
+
+        $token = $user->createToken('litchig');
+
+        return response()->json([
+            'code' => 0,
+            'data' => [
+                'token' => $token->plainTextToken,
+            ],
+            'message' => 'Login successfully',
+        ]);
+    }
+
+    /**
+     * 用户登出.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        if ($user = Auth::guard('airlock')->user()) {
+            optional($user->currentAccessToken())->delete();
+        }
+
+        return response()->json([
+            'code' => 0,
+            'data' => '',
+            'message' => 'Logout successfully',
+        ]);
     }
 }
