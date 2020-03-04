@@ -112,7 +112,7 @@ class Handler extends ExceptionHandler
                 'code' => $e->getCode() ?: 100000,
                 'data' => '',
                 'message' => $e->getMessage(),
-            ]);
+            ], 400);
         }
 
         return new JsonResponse(
