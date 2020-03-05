@@ -43,7 +43,7 @@ class LoginController extends Controller
      */
     public function logout()
     {
-        if ($user = $this->guard('airlock')->user()) {
+        if ($user = $this->guard()->user()) {
             optional($user->currentAccessToken())->delete();
         }
 
